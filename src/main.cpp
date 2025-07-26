@@ -7,7 +7,20 @@
 #include <stdexcept>
 #include <string>
 
+void show_version() {
+    std::cout << "Version: " << saltpipe::VERSION << '\n';
+}
+void show_help() {
+    show_version();
+    std::cout << saltpipe::HELP_TEXT << '\n';
+}
+
 int main(int argc, char* argv[]) {
+    if (argc == 2 && (std::string(argv[1]) == "--help")) {
+        show_help();
+        return 0;
+    }
+
     if (sodium_init() < 0) {
         std::cerr << "libsodium init failed\n";
         return 1;

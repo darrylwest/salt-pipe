@@ -6,7 +6,24 @@
 
 namespace saltpipe {
     // Version string
-    inline constexpr std::string_view VERSION = "0.1.0-101";
+    inline constexpr std::string_view VERSION = "0.1.0-102";
+
+    inline constexpr std::string_view HELP_TEXT = R"(
+Usage
+
+Generate a key: openssl rand -hex 32
+
+Setup: export SALT_PIPE_KEY=<your 32 bit hex key>
+
+To encrypt plain data:
+
+    cat file | salt-pipe enc > file.enc
+
+To decrypt encrypted data:
+
+    cat file.enc | salt-pipe dec > file.txt
+
+)";
 
     using Bytes = std::vector<unsigned char>;
 
