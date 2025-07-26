@@ -6,7 +6,7 @@
 
 namespace saltpipe {
     // Version string
-    inline constexpr std::string_view VERSION = "0.1.0-102";
+    inline constexpr std::string_view VERSION = "0.1.0-103";
 
     inline constexpr std::string_view HELP_TEXT = R"(
 Usage

@@ -11,8 +11,8 @@ void show_version() {
     std::cout << "Version: " << saltpipe::VERSION << '\n';
 }
 void show_help() {
-    show_version();
     std::cout << saltpipe::HELP_TEXT << '\n';
+    show_version();
 }
 
 int main(int argc, char* argv[]) {
@@ -27,13 +27,15 @@ int main(int argc, char* argv[]) {
     }
 
     if (argc != 2 || (std::string(argv[1]) != "enc" && std::string(argv[1]) != "dec")) {
-        std::cerr << "Usage: " << argv[0] << " enc|dec\n";
+        std::cerr << "ERROR! " << argv[0] << "need either enc or dec\n";
+        show_help();
         return 1;
     }
 
     const char* env_key = std::getenv("SALT_PIPE_KEY");
     if (!env_key) {
-        std::cerr << "Environment variable SALT_PIPE_KEY not set\n";
+        std::cerr << "ERROR! Environment variable SALT_PIPE_KEY not set\n";
+        show_help();
         return 1;
     }
 
