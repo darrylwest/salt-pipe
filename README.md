@@ -8,41 +8,46 @@
                                           |__|
 ```
 
-A small wrapper around sodium encrypt/decrypt to read from stdin -> encrypt -> write to stdout and the reverse stdin -> decrypt -> stdout.
+A small wrapper around `libsodium` for encrypting and decrypting data. It reads from `stdin`, performs the requested operation, and writes the result to `stdout`.
 
-**NOTE**: _this utility will probably work on any linux-ish system, but it has only been tested on Ubuntu24.10_
+**NOTE**: This utility is expected to work on most Unix-like systems, but it has only been formally tested on Ubuntu 24.10.
 
 ## Overview
 
-* reads the encryption key from .env using dotenvx, key name is `SALT_PIPE_KEY`
-* reads from `stdin` and either encrypts or decrypts then writes to `stdout`
+*   Reads the `SALT_PIPE_KEY` from an `.env` file, which is required for operation.
+*   Reads from `stdin`, encrypts or decrypts, and writes the result to `stdout`.
 
-### Example use:
+### Example Use
 
-#### Setup:
+#### Setup
 
-```
+Create a secret key and set the environment variable.
+
+```sh
 export SALT_PIPE_KEY=$(openssl rand -hex 32)
 echo $SALT_PIPE_KEY
 ```
 
-#### Encrypt a file:
+#### Encrypt a file
 
-`cat plain-file | salt-pipe --encrypt > file.enc`
+```sh
+cat plain-file | salt-pipe enc > file.enc
+```
 
 #### Decrypt an encrypted file
 
-`cat file.enc | salt-pipe --decrypt > plain-file
+```sh
+cat file.enc | salt-pipe dec > plain-file
+```
 
 #### Recommendations
 
-* create a .env file with SALT_PIPE_KEY=<your secret key>
-* use dotenvx to encrypt
-* use dotenvx
+*   For persistent configuration, create a `.env` file with `SALT_PIPE_KEY=<your secret key>`.
+*   Use a tool like `dotenvx` to manage your `.env` file, especially for security.
 
-## Use Case: Droplet -> s3 and s3 -> Droplet
+## Use Case: Droplet -> S3 and S3 -> Droplet
 
-### Sending data to s3/spaces:
+### Sending data to S3/Spaces:
 
 ```
 ┌─────────────┐    ┌──────────────┐    ┌─────────────┐    ┌─────────────┐
@@ -52,12 +57,12 @@ echo $SALT_PIPE_KEY
 
 ```
 
-* **source data** might be a file or it could by the output of a web-socket data transfer
-* encryption is done with sodium in an executable called salt-pipe
-* aws cli is used to do the actual transfer from the droplet to s3
-* the destination is an ecrypted file in the designated bucket and folder with an extension of `.enc` (encoded)
+*   **Source Data**: Can be a file or the output of another process, like a web-socket data transfer.
+*   **Encryption**: Performed by `salt-pipe`, which uses the `libsodium` library.
+*   **Transfer**: The `aws` CLI handles the transfer from the droplet to S3.
+*   **Destination**: The result is an encrypted file (with a `.enc` extension) stored in the specified S3 bucket.
 
-### Reading data fro s3/spaces
+### Reading data from S3/Spaces
 
 ```
 ┌─────────────┐    ┌──────────────┐    ┌─────────────┐    ┌─────────────┐
@@ -66,13 +71,11 @@ echo $SALT_PIPE_KEY
 └─────────────┘    └──────────────┘    └─────────────┘    └─────────────┘
 ```
 
-* the data source is an ecrypted file in the designated bucket and folder with an extension of `.enc`
-* aws cli is used to do the actual transfer from s3 to the droplet
-* encryption is done with sodium in an executable called salt-pipe
-* The destination data might be a file or it could by the input of a web-socket data transfer
+*   **Data Source**: An encrypted file (with a `.enc` extension) in the specified S3 bucket.
+*   **Transfer**: The `aws` CLI handles the transfer from S3 to the droplet.
+*   **Decryption**: Performed by `salt-pipe`.
+*   **Destination Data**: Can be saved to a file or piped as input to another process.
 
 
 ###### dpw | 2025.07.26
-
-
 
