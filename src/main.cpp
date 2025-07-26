@@ -1,11 +1,12 @@
 
 #include <sodium.h>
-#include <vector>
-#include <string>
-#include <iostream>
+
 #include <cstdlib>
-#include <stdexcept>
+#include <iostream>
 #include <iterator>
+#include <stdexcept>
+#include <string>
+#include <vector>
 // #include <saltpipe::saltpipe.hpp>
 
 using Bytes = std::vector<unsigned char>;
@@ -24,9 +25,7 @@ Bytes read_stdin() {
     return Bytes(std::istream_iterator<unsigned char>(std::cin), {});
 }
 
-void write_stdout(const Bytes& data) {
-    std::cout.write(reinterpret_cast<const char*>(data.data()), data.size());
-}
+void write_stdout(const Bytes& data) { std::cout.write(reinterpret_cast<const char*>(data.data()), data.size()); }
 
 Bytes encrypt(const Bytes& plaintext, const Bytes& key) {
     Bytes nonce(crypto_secretbox_NONCEBYTES);
@@ -34,8 +33,7 @@ Bytes encrypt(const Bytes& plaintext, const Bytes& key) {
 
     Bytes ciphertext(crypto_secretbox_MACBYTES + plaintext.size());
 
-    crypto_secretbox_easy(ciphertext.data(), plaintext.data(), plaintext.size(),
-                          nonce.data(), key.data());
+    crypto_secretbox_easy(ciphertext.data(), plaintext.data(), plaintext.size(), nonce.data(), key.data());
 
     // prepend nonce
     Bytes result;
@@ -53,8 +51,8 @@ Bytes decrypt(const Bytes& input, const Bytes& key) {
     Bytes ciphertext(input.begin() + crypto_secretbox_NONCEBYTES, input.end());
     Bytes decrypted(ciphertext.size() - crypto_secretbox_MACBYTES);
 
-    if (crypto_secretbox_open_easy(decrypted.data(), ciphertext.data(), ciphertext.size(),
-                                   nonce.data(), key.data()) != 0) {
+    if (crypto_secretbox_open_easy(decrypted.data(), ciphertext.data(), ciphertext.size(), nonce.data(), key.data())
+        != 0) {
         throw std::runtime_error("Decryption failed");
     }
     return decrypted;
@@ -81,9 +79,7 @@ int main(int argc, char* argv[]) {
     Bytes input = read_stdin();
 
     try {
-        Bytes output = (std::string(argv[1]) == "encrypt")
-                           ? encrypt(input, key)
-                           : decrypt(input, key);
+        Bytes output = (std::string(argv[1]) == "encrypt") ? encrypt(input, key) : decrypt(input, key);
         write_stdout(output);
     } catch (const std::exception& ex) {
         std::cerr << "Error: " << ex.what() << "\n";
@@ -92,4 +88,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-

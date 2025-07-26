@@ -1,5 +1,13 @@
 # Salt Pipe
 
+```
+ _______         __ __          ______ __
+|     __|.---.-.|  |  |_ ______|   __ \__|.-----.-----.
+|__     ||  _  ||  |   _|______|    __/  ||  _  |  -__|
+|_______||___._||__|____|      |___|  |__||   __|_____|
+                                          |__|
+```
+
 A small wrapper around sodium encrypt/decrypt to read from stdin -> encrypt -> write to stdout and the reverse stdin -> decrypt -> stdout.
 
 **NOTE**: _this utility will probably work on any linux-ish system, but it has only been tested on Ubuntu24.10_
