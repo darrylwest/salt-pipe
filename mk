@@ -33,7 +33,7 @@ do
             echo "pull latest code from `git branch --show-current` branch."
             git pull
 
-            /bin/rm -fr build && cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON
+            /bin/rm -fr build && cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON && cmake --build build
 
             exit 0
         ;;
@@ -44,22 +44,14 @@ do
             shift
         ;;
         build)
-            [ -d build ] || mkdir build
-            # clear
-
-            g++ -std=c++23 src/main.cpp -lsodium -o build/salt-pipe
-            # export key=`txkey`
-            # (cd ~/.timer-client && ./bin/timer-client $key start)
-
-            # time (cd build && make ${verbose} $FLAGS || exit 1)
-
-            # (cd ~/.timer-client && ./bin/timer-client $key stop)
+            [ -d build ] || cmake -B build
+            cmake --build build
 
             shift
         ;;
         unit|test)
             # build it first
-            (cd build && make ${verbose} $FLAGS || exit 1)
+            cmake --build build
 
             echo "Running unit tests..."
             ./build/unit_tests

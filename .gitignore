@@ -10,3 +10,5 @@ artifacts/*.tar.gz
 
 .env.keys
 .enc
+
+tmp
