@@ -22,6 +22,7 @@ The package will expose a class-based client that provides a simple, file-system
     *   Encryption will use `libsodium`'s `crypto_aead_aes256gcm_encrypt` function, which provides authenticated encryption (AEAD).
     *   A unique nonce will be generated for each `put` operation.
     *   The final object stored in S3 will be a concatenation of `[nonce][encrypted_data]`.
+    *   The object filename will be the same as the input filename with `.enc` appended to the original, e.g. `config.json` -> `config.json.enc`
 
 **2.2. Feature: Secure GET Operation**
 
@@ -44,7 +45,7 @@ The package will expose a class-based client that provides a simple, file-system
 **2.4. Feature: LIST Operation**
 
 *   **Description:** Lists the keys (filenames) within a specified bucket and prefix ("folder").
-*   **API:** `list(path: string): Promise<string[]>`
+*   **API:** `list(path: string, recursive: boolean = false): Promise<string[]>`
 *   **User Story:** As a developer, I want to get a list of all objects stored within a specific "folder" in my bucket.
 *   **Technical Details:**
     *   The `path` will be in the format `bucket-name/folder/`.
@@ -62,8 +63,8 @@ import { SecureS3Store } from 'secure-s3-store';
 const store = new SecureS3Store({
   secretKey: process.env.MY_SECRET_KEY, // Hex-encoded 32-byte key
   s3Config: {
-    endpoint: 'https://nyc3.digitaloceanspaces.com',
-    region: 'us-east-1', // region is still needed, even with a custom endpoint
+    endpoint: 'https://sfo3.digitaloceanspaces.com',
+    region: 'sfo3', // region is still needed, even with a custom endpoint
     credentials: {
       accessKeyId: process.env.S3_ACCESS_KEY,
       secretAccessKey: process.env.S3_SECRET_KEY,
@@ -85,3 +86,5 @@ const store = new SecureS3Store({
 *   **CLI Tool:** This is a library/SDK, not a command-line tool.
 *   **Large File Support (Multi-part Uploads):** V1 will focus on objects that can be handled in memory. Streaming and multi-part uploads can be considered for a future release.
 *   **Advanced S3 Features:** Does not expose underlying S3 features like versioning, lifecycle policies, or bucket creation.
+
+###### dpw | 2025.07.26
