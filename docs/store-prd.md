@@ -13,6 +13,7 @@
 The package will expose a class-based client that provides a simple, file-system-like interface for interacting with encrypted objects.
 
 **2.1. Feature: Secure PUT Operation**
+
 *   **Description:** Encrypts a given data payload and uploads it to the specified S3 path.
 *   **API:** `put(path: string, data: Buffer | string): Promise<void>`
 *   **User Story:** As a developer, I want to provide a path and a data buffer, and have the library automatically encrypt and store it in my S3 bucket, so I don't have to manage the encryption process.
@@ -23,6 +24,7 @@ The package will expose a class-based client that provides a simple, file-system
     *   The final object stored in S3 will be a concatenation of `[nonce][encrypted_data]`.
 
 **2.2. Feature: Secure GET Operation**
+
 *   **Description:** Downloads an object from S3 and decrypts it using the provided secret key.
 *   **API:** `get(path: string): Promise<Buffer>`
 *   **User Story:** As a developer, I want to request an object by its path and receive the original, decrypted data, so I can use it in my application.
@@ -34,11 +36,13 @@ The package will expose a class-based client that provides a simple, file-system
     *   Returns the original data as a `Buffer`.
 
 **2.3. Feature: DELETE Operation**
+
 *   **Description:** Deletes an object from the S3 bucket. This is a direct pass-through to the S3 API.
 *   **API:** `delete(path: string): Promise<void>`
 *   **User Story:** As a developer, I want to permanently remove an object from my bucket by its path.
 
 **2.4. Feature: LIST Operation**
+
 *   **Description:** Lists the keys (filenames) within a specified bucket and prefix ("folder").
 *   **API:** `list(path: string): Promise<string[]>`
 *   **User Story:** As a developer, I want to get a list of all objects stored within a specific "folder" in my bucket.
