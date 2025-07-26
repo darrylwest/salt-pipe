@@ -1,9 +1,9 @@
 
-#include <saltpipe/saltpipe.hpp>
 #include <sodium.h>
 
 #include <cstdlib>
 #include <iostream>
+#include <saltpipe/saltpipe.hpp>
 #include <stdexcept>
 #include <string>
 
@@ -28,8 +28,8 @@ int main(int argc, char* argv[]) {
     saltpipe::Bytes input = saltpipe::read_stdin();
 
     try {
-        saltpipe::Bytes output = (std::string(argv[1]) == "enc") ? saltpipe::encrypt(input, key)
-                                                              : saltpipe::decrypt(input, key);
+        saltpipe::Bytes output
+            = (std::string(argv[1]) == "enc") ? saltpipe::encrypt(input, key) : saltpipe::decrypt(input, key);
         saltpipe::write_stdout(output);
     } catch (const std::exception& ex) {
         std::cerr << "Error: " << ex.what() << "\n";
