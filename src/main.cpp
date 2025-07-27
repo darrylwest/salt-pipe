@@ -10,6 +10,7 @@
 void show_version() {
     std::cout << "Version: " << saltpipe::VERSION << '\n';
 }
+
 void show_help() {
     std::cout << saltpipe::HELP_TEXT << '\n';
     show_version();
