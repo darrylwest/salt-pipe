@@ -14,18 +14,21 @@ A small wrapper around `libsodium` for encrypting and decrypting data. It reads 
 
 ## Overview
 
-*   Reads the `SALT_PIPE_KEY` from an `.env` file, which is required for operation.
+*   Reads key configuration from environment variables.
+*   `PRIMARY_KEY`: The ID of the key to use for encryption (e.g., `v1`).
+*   `KEY_V1`, `KEY_V2`, etc.: The actual encryption keys, where the suffix (`V1`, `V2`) matches the key IDs.
 *   Reads from `stdin`, encrypts or decrypts, and writes the result to `stdout`.
 
 ### Example Use
 
 #### Setup
 
-Create a secret key and set the environment variable.
+Create secret keys and set the environment variables. The `PRIMARY_KEY` variable tells `salt-pipe` which key to use for encryption. The other keys are available for decryption.
 
 ```sh
-export SALT_PIPE_KEY=$(openssl rand -hex 32)
-echo $SALT_PIPE_KEY
+export PRIMARY_KEY=v1
+export KEY_V1=$(openssl rand -hex 32)
+export KEY_V2=$(openssl rand -hex 32)
 ```
 
 #### Encrypt a file
@@ -36,14 +39,16 @@ cat plain-file | salt-pipe enc > file.enc
 
 #### Decrypt an encrypted file
 
+`salt-pipe` will automatically use the correct key for decryption based on the key ID embedded in the encrypted file.
+
 ```sh
 cat file.enc | salt-pipe dec > plain-file
 ```
 
 #### Recommendations
 
-*   For persistent configuration, create a `.env` file with `SALT_PIPE_KEY=<your secret key>`.
-*   Use a tool like `dotenvx` to manage your `.env` file, especially for security.
+*   For persistent configuration, create a `.env` file.
+*   Use a tool like `dotenvx` to manage your `.env` file, especially for security. `dotenvx run -- your-command` will load the `.env` file and make the variables available to your command.
 
 ## Use Case: Droplet -> S3 and S3 -> Droplet
 

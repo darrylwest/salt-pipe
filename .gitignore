@@ -9,6 +9,7 @@ artifacts/*.tgz
 artifacts/*.tar.gz
 
 .env.keys
+.env.set
 .enc
 
 tmp

@@ -33,19 +33,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    const char* env_key = std::getenv("SALT_PIPE_KEY");
-    if (!env_key) {
-        std::cerr << "ERROR! Environment variable SALT_PIPE_KEY not set\n";
-        show_help();
-        return 1;
-    }
-
-    saltpipe::Bytes key = saltpipe::hex_to_bytes(env_key);
-    saltpipe::Bytes input = saltpipe::read_stdin();
-
     try {
+        saltpipe::Config config = saltpipe::load_config_from_env();
+        saltpipe::Bytes input = saltpipe::read_stdin();
         saltpipe::Bytes output
-            = (std::string(argv[1]) == "enc") ? saltpipe::encrypt(input, key) : saltpipe::decrypt(input, key);
+            = (std::string(argv[1]) == "enc") ? saltpipe::encrypt(input, config) : saltpipe::decrypt(input, config);
         saltpipe::write_stdout(output);
     } catch (const std::exception& ex) {
         std::cerr << "Error: " << ex.what() << "\n";
