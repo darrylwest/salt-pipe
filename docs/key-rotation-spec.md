@@ -32,16 +32,16 @@ The new format will be a concatenation of the following parts:
 
 ## 4. Updated Method Logic
 
-### `put` Method
+### `encrypt` Method
 
-1.  The `put` method will identify the primary key to use for encryption by looking up `config.primaryKey` in the `config.keys` object.
+1.  The `encrypt` method will identify the primary key to use for encryption by looking up `config.primaryKey` in the `config.keys` object.
 2.  The KID of the primary key will be retrieved (e.g., `"v2"`).
 3.  The data will be encrypted as usual using the primary key.
 4.  Before uploading to S3, the final payload will be constructed by prepending the KID and its length to the IV, AuthTag, and ciphertext, following the new storage format.
 
-### `get` Method
+### `decrypt` Method
 
-1.  The `get` method will download the entire object from S3.
+1.  The `decrypt` method will download the entire object from S3.
 2.  It will first read the **first byte** to determine the length of the KID.
 3.  It will then read the next `n` bytes (where `n` is the length from the first byte) to extract the KID string.
 4.  Using this extracted KID, it will look up the corresponding secret key in the `config.keys` object.
